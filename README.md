@@ -8,6 +8,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 <img width="1185" alt="Captura de Tela 2023-04-24 às 00 35 01" src="https://user-images.githubusercontent.com/29484089/233869760-62220229-10ec-409e-80a5-e30ab3b93819.png">
 
+# Test Coverage (react-testing-library & jest)
+
+<img width="735" alt="Captura de Tela 2023-04-24 às 00 39 24" src="https://user-images.githubusercontent.com/29484089/233869899-64942e84-baf1-4186-a9dd-b0526161dbcf.png">
 
 ## Getting Started
 
