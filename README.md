@@ -1,10 +1,13 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-# Solo Sixty - Login Pages *react-hook-form and validation schema by zod
+# Solo Sixty - Login Pages
 
 <img width="1240" alt="Captura de Tela 2023-04-24 às 00 26 30" src="https://user-images.githubusercontent.com/29484089/233869443-b0f7a55b-c948-45fe-b730-33c42dd5d1be.png">
 
-<img width="628" alt="Captura de Tela 2023-04-24 às 00 27 02" src="https://user-images.githubusercontent.com/29484089/233869465-9f09591b-1de8-4f78-a35d-c5c77d178cce.png">
+# Validation (react-hook-form & zod)
+
+<img width="1185" alt="Captura de Tela 2023-04-24 às 00 35 01" src="https://user-images.githubusercontent.com/29484089/233869760-62220229-10ec-409e-80a5-e30ab3b93819.png">
+
 
 ## Getting Started
 
