@@ -1,0 +1,59 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-new": "off",
+    "class-methods-use-this": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 2,
+        "maxBOF": 1
+      }
+    ],
+    "padding-line-between-statements": [
+      "error",
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": "return"
+      },
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": "export"
+      },
+      {
+        "blankLine": "never",
+        "prev": "export",
+        "next": "export"
+      }
+    ]
+  },
+  "ignorePatterns": [
+    "dist"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx"
+      ],
+      "parserOptions": {
+        "sourceType": "module",
+        "project": [
+          "./tsconfig.json"
+        ]
+      }
+    }
+  ]
+}

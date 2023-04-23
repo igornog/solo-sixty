@@ -1,20 +1,21 @@
-import { Box, Grid } from '@mui/material';
 import NavBar from '../Navbar/Navbar';
 import Header from '../Header/Header';
 
-const Home: React.FunctionComponent = () => {
+const Layout: React.FunctionComponent<Props> = (props: Props) => {
   return (
-    <Box display={'flex'} gap={'2rem'}>
+    <div className={`flex gap-8 h-screen w-screen bg-white text-black`}>
       <NavBar />
-
-      <Box display={'flex'} flexDirection={'column'} width={'100%'}>
+      <div className="flex flex-col w-[inherit]">
         <Header />
-        <Grid>
-          <p>test</p>
-        </Grid>
-      </Box>
-    </Box>
+        <div className="h-full overflow-hidden">{props.children}</div>
+      </div>
+    </div>
   );
 };
 
-export default Home;
+interface Props {
+  title?: string;
+  children?: React.ReactNode;
+}
+
+export default Layout;

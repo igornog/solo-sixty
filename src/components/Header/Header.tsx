@@ -1,33 +1,36 @@
-import { Box } from '@mui/material';
-import { Notification, SearchNormal } from 'iconsax-react';
-import Typography from '../Typography/Typography';
-import FadeMenu from '../PopUp/ProfilePopUp';
-import TextField from '../TextField/TextField';
+import { Search } from '@mui/icons-material';
+import { useRouter } from 'next/router';
+import React from 'react';
+import Input from '../Input';
+import AccountMenu from '../Menu/AccountMenu';
+import { Navigation, NavigationProps } from '../Navbar/Navbar';
 
 const Header: React.FunctionComponent = () => {
+  const router = useRouter();
+
   return (
-    <Box
-      display={'flex'}
-      alignItems={'center'}
-      justifyContent={'space-between'}
-      padding={'2rem 0'}
-    >
-      <Box display={'flex'} alignItems={'center'} gap={'50px'}>
-        <Typography variant="h2" bold>
-          {}
-        </Typography>
-        <TextField startIcon={<SearchNormal />} placeholder={'Search here'} />
-      </Box>
-      <Box
-        display={'flex'}
-        gap={'15px'}
-        alignItems={'center'}
-        paddingRight={'2rem'}
-      >
-        <Notification color="grey" />
-        <FadeMenu />
-      </Box>
-    </Box>
+    <div className="flex px-0 py-8 items-start justify-between">
+      <div className="flex items-center gap-[50px]">
+        <h4 className="font-heading">
+          {Navigation.find(
+            (item: NavigationProps) => item.link === router.route,
+          )?.name ??
+            Navigation.map((item: NavigationProps) => {
+              return item.subItems?.find(
+                (item: NavigationProps) => item.link === router.route,
+              )?.name;
+            })}
+        </h4>
+        <Input
+          placeholder={'Search'}
+          type={'search'}
+          startAdornment={<Search className="text-grey6" />}
+        />
+      </div>
+      <div className="flex items-center gap-[15px] pr-8">
+        <AccountMenu />
+      </div>
+    </div>
   );
 };
 

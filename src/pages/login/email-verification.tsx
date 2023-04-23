@@ -1,14 +1,10 @@
-import { Box } from '@mui/material';
-import Button, { ButtonColor } from '../../components/Button/Button';
-import Typography from '../../components/Typography/Typography';
 import ArrowIcon from '../../../public/images/Arrow-login.svg';
-import EmailSentIcon from '../../../public/images/email1.svg';
+import EmailSentIcon from '../../../public/images/emailIcon.svg';
 import { Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
-import LoginLayout from '../../components/Layout/Login/LoginLayout';
 import { useRouter } from 'next/router';
-import { white } from '../../utils/colors';
-import { PageLinks } from '../../utils/consts';
+import { PageLinks } from '../../constants';
+import Button from '../../components/Button';
 
 const VerificationEmail: React.FunctionComponent<Props> = (props: Props) => {
   const router = useRouter();
@@ -18,8 +14,13 @@ const VerificationEmail: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   return (
-    <LoginLayout title="verify your email">
-      <div className="login-fields">
+    <>
+      <div className="w-full text-center rounded-[1px] left-0 top-0">
+        <h3 className="bg-grey4 text-white font-heading font-normal text-[32px] leading-[34px] p-[30px]">
+          {'verify your email'}
+        </h3>
+      </div>
+      <div className="flex flex-col gap-5 p-[30px] items-center">
         <Image
           src={EmailSentIcon}
           className={'email-icon'}
@@ -27,23 +28,33 @@ const VerificationEmail: React.FunctionComponent<Props> = (props: Props) => {
           height="60"
           alt="EmailSentIcon"
         ></Image>
-        <Box textAlign={'center'}>
-          <Typography color={white} opacity={0.4} variant="body1">
+        <div className="text-center">
+          <div className="text-[white] opacity-40">
             We&apos;ve sent you an email verification to the email address
             provided. Please click the link to continue using Solo60 Portal.
-          </Typography>
-        </Box>
+          </div>
+        </div>
 
-        <Box display={'flex'} justifyContent={'center'} marginTop={'10px'}>
+        <div className="flex justify-center">
           <Button
+            className="bg-green [&:hover]:bg-green rounded-[1px]"
+            size={'large'}
+            colorVariant={'secondary'}
+            type={'submit'}
             label={'Log In'}
-            color={ButtonColor.Secondary}
+            dataTestid={'log-in-button'}
             onClick={handleSubmit}
-            startIcon={<Image src={ArrowIcon} alt="ArrowLogin" />}
+            startIcon={
+              <Image
+                src={ArrowIcon}
+                alt={'ArrowLogin'}
+                className="relative top-[-0.5px] -left-2.5"
+              />
+            }
           />
-        </Box>
+        </div>
       </div>
-    </LoginLayout>
+    </>
   );
 };
 

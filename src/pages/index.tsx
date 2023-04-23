@@ -1,12 +1,5 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+const Dashboard = () => {
+  return <p>this is the dashboard page</p>;
+};
 
-export default function Home() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push('/login');
-  }, [router]);
-
-  return <></>;
-}
+export default Dashboard;

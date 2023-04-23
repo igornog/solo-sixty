@@ -1,0 +1,8 @@
+#!/bin/sh
+
+### BEGIN GPTCOMMIT HOOK ###
+if [ -x "$(command -v gptcommit)" ]; then
+    gptcommit prepare-commit-msg --commit-msg-file "$1" --commit-source "$2" --commit-sha "$3"
+fi
+
+### END GPTCOMMIT HOOK ###

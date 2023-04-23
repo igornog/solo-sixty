@@ -1,71 +1,65 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import Button, { ButtonColor } from '../../components/Button/Button';
-import TextField, { TextFieldType } from '../../components/TextField/TextField';
-import Typography from '../../components/Typography/Typography';
-import { Box } from '@mui/material';
-import { red1, white } from '../../utils/colors';
-
 import ArrowLogin from '../../../public/images/Arrow-login.svg';
 import PasswordIcon from '../../../public/images//password.svg';
-import styled from 'styled-components';
-import LoginLayout from '../../components/Layout/Login/LoginLayout';
-import { PageLinks } from '../../utils/consts';
+import { PageLinks } from '../../constants';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { FieldType } from '../../constants';
 import {
-  Controller,
-  FieldValue,
-  FieldValues,
-  SubmitHandler,
-  useForm,
-} from 'react-hook-form';
-
-const StyledForgetPasswordBox = styled(Box)`
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  position: relative;
-  top: -10px;
-
-  p {
-    letter-spacing: 0;
-
-    &:hover {
-      cursor: pointer;
-      text-decoration: underline;
-    }
-  }
-`;
+  ValidationSchemaType,
+  validationSchema,
+} from '../../utils/validationSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Button from '../../components/Button';
+import FormInput from '../../components/Form/FormInput';
 
 const Login: React.FunctionComponent = () => {
   const router = useRouter();
   const {
     control,
     handleSubmit,
-    formState: { isValid },
-  } = useForm();
+    reset,
+    formState: { errors, isSubmitSuccessful },
+  } = useForm<ValidationSchemaType>({
+    resolver: zodResolver(validationSchema),
+  });
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
+
+  const onSubmit: SubmitHandler<ValidationSchemaType> = (data: any) => {
+    router.push(PageLinks.ForgotPassword);
   };
 
   return (
-    <LoginLayout title={'welcome to solo60'}>
-      <form className="login-fields" onSubmit={handleSubmit(onSubmit)}>
+    <>
+      <div className="w-full text-center rounded-[1px] left-0 top-0">
+        <h3 className="bg-grey4 text-white font-heading font-normal text-[32px] leading-[34px] p-[30px]">
+          {'welcome to solo60'}
+        </h3>
+      </div>
+      <form
+        className="flex flex-col gap-5 p-[30px]"
+        onSubmit={handleSubmit(onSubmit)}
+        data-testid="login-form"
+      >
         <Controller
           name="email"
           control={control}
-          rules={{ required: true }}
+          defaultValue=""
           render={({ field }) => (
-            <TextField
-              {...field}
-              label={'email'}
-              formValidation
-              $underlineBorder
-              $darkMode
+            <FormInput
               placeholder={'Enter email'}
-              type={TextFieldType.Email}
+              label={'email'}
+              {...field}
+              type={FieldType.Text}
+              error={errors.email ?? false}
+              helperText={errors.email?.message?.toString()}
             />
           )}
         />
@@ -73,46 +67,49 @@ const Login: React.FunctionComponent = () => {
         <Controller
           name="password"
           control={control}
-          rules={{ required: true }}
+          defaultValue=""
           render={({ field }) => (
-            <TextField
+            <FormInput
               {...field}
-              label={'password'}
-              formValidation
-              $underlineBorder
-              $darkMode
+              label="password"
               placeholder={'Enter password'}
-              type={TextFieldType.Password}
+              type={FieldType.Password}
+              error={errors.password ?? false}
+              helperText={errors.password?.message?.toString()}
             />
           )}
         />
 
-        <StyledForgetPasswordBox
+        <div
+          className="flex gap-[5px] items-center w-fit relative -top-2.5"
           onClick={() => router.push(PageLinks.ForgotPassword)}
+          data-testid="forget-password-link"
         >
           <Image src={PasswordIcon} alt={'PasswordIcon'} />
-          <Typography variant={'body1'} color={white} opacity={0.4}>
+          <p className="tracking-[0] w-fit text-[white] opacity-40 hover:cursor-pointer hover:underline">
             Forgot Password?
-          </Typography>
-        </StyledForgetPasswordBox>
+          </p>
+        </div>
 
-        <Box display={'flex'} justifyContent={'center'}>
+        <div className="flex justify-center">
           <Button
-            label={'Log In'}
-            color={ButtonColor.Secondary}
+            size={'large'}
             type={'submit'}
+            colorVariant={'secondary'}
+            label={'Log In'}
+            dataTestid={'login-button'}
+            className="bg-green [&:hover]:bg-green rounded-[1px] px-12"
             startIcon={
               <Image
                 src={ArrowLogin}
                 alt={'ArrowLogin'}
-                className="start-icon"
+                className="relative top-[-0.5px] -left-2.5"
               />
             }
-            disabled={!isValid}
           />
-        </Box>
+        </div>
       </form>
-    </LoginLayout>
+    </>
   );
 };
 

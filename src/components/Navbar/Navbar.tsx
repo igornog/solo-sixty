@@ -1,134 +1,162 @@
-import styled, { css } from 'styled-components';
-import { black, green, grey2, white } from '../../utils/colors';
-import Typography from '../Typography/Typography';
-import { Box } from '@mui/material';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { MenuItems } from '../../constants';
 import logoBlack from '../../../public/images/logo-black.svg';
-import { MenuOptions } from '../../utils/redux/types/status.type';
-import Dashboard from '../../pages/dashboard';
-import { Home } from 'iconsax-react';
-import router from 'next/router';
-
-const StyledList = styled.ul`
-  list-style-type: none;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  gap: 2vh;
-  width: inherit;
-`;
-
-const StyledListItem = styled.li<{ isActive: boolean }>`
-  display: flex;
-  gap: 10px;
-  padding: 1rem 2rem;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-  white-space: nowrap;
-
-  ${({ isActive }) =>
-    isActive &&
-    css`
-      background: linear-gradient(
-        90deg,
-        rgba(96, 164, 152, 0.2) 0%,
-        rgba(96, 164, 152, 0) 34.9%
-      );
-      color: ${green};
-
-      p {
-        font-weight: 600;
-      }
-    `}
-
-  &:hover {
-    transition: 0.3s;
-    cursor: pointer;
-    background: linear-gradient(
-      90deg,
-      rgba(96, 164, 152, 0.2) 0%,
-      rgba(96, 164, 152, 0) 34.9%
-    );
-    color: ${green};
-  }
-`;
-
-const StyledLogo = styled.img`
-  padding: 2rem;
-`;
+import DashboardIcon from '../../../public/images/DashboardIcon.svg';
+import LocationsSessionsIcon from '../../../public/images/LocationsSessionsIcon.svg';
+import MarketingIcon from '../../../public/images/MarketingIcon.svg';
+import OperationIcon from '../../../public/images/OperationIcon.svg';
+import PartnersIcon from '../../../public/images/PartnersIcon.svg';
+import ReportsInsightsIcon from '../../../public/images/ReportsInsightsIcon.svg';
+import UsersIcon from '../../../public/images/UsersIcon.svg';
+import CreditsIcon from '../../../public/images/CreditsIcon.svg';
 
 export const Navigation: NavigationProps[] = [
   {
-    link: '/dashboard',
-    icon: <Home />,
-    name: MenuOptions.Dashboard,
+    link: '/',
+    icon: DashboardIcon,
+    name: MenuItems.Dashboard,
   },
   {
-    link: '/booking&gyms',
-    icon: <Home />,
-    name: MenuOptions.BookingsAndGyms,
+    link: '/locations&sessions',
+    icon: LocationsSessionsIcon,
+    name: MenuItems.LocationsAndSessions,
+    subItems: [
+      {
+        link: '/locations&sessions/locations',
+        name: MenuItems.Locations,
+      },
+      {
+        link: '/locations&sessions/sessions',
+        name: MenuItems.Sessions,
+      },
+    ],
+  },
+  {
+    link: '/users',
+    icon: UsersIcon,
+    name: MenuItems.Users,
   },
   {
     link: '/credits',
-    icon: <Home />,
-    name: MenuOptions.Credits,
-  },
-  {
-    link: '/users&subscriptions',
-    icon: <Home />,
-    name: MenuOptions.UsersAndSubscriptions,
-  },
-  {
-    link: '/operation',
-    icon: <Home />,
-    name: MenuOptions.Operation,
+    icon: CreditsIcon,
+    name: MenuItems.Credits,
   },
   {
     link: '/marketing',
-    icon: <Home />,
-    name: MenuOptions.Marketing,
-  },
-  {
-    link: '/partners',
-    icon: <Home />,
-    name: MenuOptions.Partners,
+    icon: MarketingIcon,
+    name: MenuItems.Marketing,
   },
   {
     link: '/reports&insights',
-    icon: <Home />,
-    name: MenuOptions.ReportsAndInsights,
+    icon: ReportsInsightsIcon,
+    name: MenuItems.ReportsAndInsights,
+  },
+  {
+    link: '/operation',
+    icon: OperationIcon,
+    name: MenuItems.Operation,
+  },
+  {
+    link: '/partners',
+    icon: PartnersIcon,
+    name: MenuItems.Partners,
   },
 ];
 export interface NavigationProps {
   link: string;
-  icon?: React.ReactNode;
-  name: MenuOptions;
+  icon?: any;
+  name: any;
+  subItems?: NavigationProps[];
 }
 
 const NavBar: React.FunctionComponent = () => {
-  const handleNavigate = (link: string, name: MenuOptions) => {
-    router.push(link);
-  };
+  const router = useRouter();
 
   return (
-    <Box height={'100%'} width={'auto'}>
-      <StyledLogo src={logoBlack} alt={'logo'} />
-      <StyledList>
+    <div className="h-full w-auto min-w-[15vw] font-inter">
+      <Image className="p-8" src={logoBlack} alt={'logo'} />
+      <ul className="list-none flex flex-col w-[inherit] p-0">
         {Navigation.map((item: NavigationProps, index: number) => {
           return (
-            <StyledListItem
-              isActive={false}
-              onClick={() => handleNavigate(item.link, item.name)}
-              key={index}
-            >
-              {item.icon}
-              <Typography variant={'body1'}>{item.name}</Typography>
-            </StyledListItem>
+            <>
+              <li
+                className={`flex gap-2.5 items-baseline text-center 
+              relative z-[1] whitespace-nowrap px-8 py-4 cursor-pointer
+              hover:bg-gradient-to-r from-[#60A498_-250%] to-white
+              ${
+                router.route === item.link &&
+                `bg-gradient-to-r from-[#60A498_-150%] to-white`
+              }
+              
+              `}
+                onClick={() => router.push(item.link)}
+                key={index}
+              >
+                <Image
+                  src={item.icon}
+                  width={12}
+                  height={14}
+                  alt={item.name}
+                  className={`
+              ${
+                router.route === item.link &&
+                'invert-[61%] sepia-[8%] saturate-[1609%] hue-rotate-[120deg] brightness-[96%] contrast-[88%]'
+              }`}
+                />
+                <p
+                  className={` font-normal text-sm ${
+                    router.route === item.link && 'text-primary font-semibold'
+                  }`}
+                >
+                  {item.name}
+                </p>
+              </li>
+
+              {item.subItems && (
+                <>
+                  {item.subItems.map(
+                    (subItem: NavigationProps, index: number) => {
+                      return (
+                        <li
+                          className={`flex gap-2.5 items-center text-center 
+                          relative z-[1] whitespace-nowrap px-8 py-4 pl-[calc(2.625rem+24px)] cursor-pointer
+                          hover:bg-gradient-to-r from-[#60A498_-250%] to-white
+                          ${
+                            router.route === subItem.link &&
+                            `bg-gradient-to-r from-[#60A498_-150%] to-white`
+                          }
+                          ${item.subItems?.map((subItem: any) => {
+                            if (
+                              subItem.link.includes(item.link) &&
+                              router.route === item.link
+                            ) {
+                              return `bg-gradient-to-r from-[#60A498_-150%] to-white`;
+                            }
+                          })}
+                          `}
+                          onClick={() => router.push(subItem.link)}
+                          key={index}
+                        >
+                          <p
+                            className={` font-normal text-sm ${
+                              router.route === subItem.link &&
+                              'text-primary font-semibold'
+                            }`}
+                          >
+                            {subItem.name}
+                          </p>
+                        </li>
+                      );
+                    },
+                  )}
+                </>
+              )}
+            </>
           );
         })}
-      </StyledList>
-    </Box>
+      </ul>
+    </div>
   );
 };
 

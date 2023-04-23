@@ -1,221 +1,175 @@
-import { Box } from '@mui/material';
-import Button, { ButtonColor } from '../../components/Button/Button';
-import Typography from '../../components/Typography/Typography';
-import { green1, red1, white } from '../../utils/colors';
-import styled from 'styled-components';
-import ArrowIcon from '../../../public/images/Arrow-login.svg';
-import { useCallback, useEffect, useState } from 'react';
-import TextField, { TextFieldType } from '../../components/TextField/TextField';
-import { hasCapitalLetter, hasNumber } from '../../utils/formValidation';
-import { Error } from '../../types';
+import { useEffect, useState } from 'react';
+import { FieldType, PasswordStrength } from '../../constants';
 import Image from 'next/image';
-import LoginLayout from '../../components/Layout/Login/LoginLayout';
 import { useRouter } from 'next/router';
-import { PageLinks } from '../../utils/consts';
-
-const StyledUnorderedList = styled.ul`
-  margin: 0;
-  padding: 10px 15px 0;
-
-  li {
-    padding: 0;
-  }
-`;
-const PasswordStrengthBox = styled(Box)<{
-  strongPassword?: boolean | undefined;
-}>`
-  color: ${white};
-  span {
-    color: ${({ strongPassword }) =>
-      strongPassword === undefined
-        ? white
-        : strongPassword === true
-        ? green1
-        : red1};
-  }
-`;
+import { PageLinks } from '../../constants';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import {
+  validationSchemaNewPasswordType,
+  validationSchemaNewPassword,
+} from '../../utils/validationSchema';
+import { LETTER_CHECK, NUMBER_CHECK } from '../../utils/regex';
+import Button from '../../components/Button';
+import ArrowIcon from '../../../public/images/Arrow-login.svg';
+import FormInput from '../../components/Form/FormInput';
 
 const CreatePassword: React.FunctionComponent = () => {
   const router = useRouter();
-
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const [passwordTips, setPasswordTips] = useState(false);
-  const [wrongPassword, setWrongPassword] = useState(false);
-  const [wrongPasswordLength, setWrongPasswordLength] = useState<Error>({
-    isError: false,
-    errorText: '',
-  });
-  const [wrongPasswordCapitalLetter, setwrongPasswordCapitalLetter] =
-    useState<Error>({ isError: false, errorText: '' });
-  const [wrongPasswordNumber, setwrongPasswordNumber] = useState<Error>({
-    isError: false,
-    errorText: '',
+  const [passwordStrength, setPasswordStrength] = useState('');
+  const {
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors, isSubmitSuccessful },
+  } = useForm<validationSchemaNewPasswordType>({
+    resolver: zodResolver(validationSchemaNewPassword),
   });
 
-  const checkPasswordError = useCallback(() => {
-    let hasError = false;
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
 
-    if (password.length < 8) {
-      setWrongPasswordLength({
-        isError: true,
-        errorText: 'Password must be at least 8 characters long.',
-      });
-      hasError = true;
-    } else {
-      setWrongPasswordLength({
-        isError: false,
-        errorText: '',
-      });
-    }
-    if (!hasCapitalLetter(password)) {
-      setwrongPasswordCapitalLetter({
-        isError: true,
-        errorText: 'Password must contain at least one capital letter.',
-      });
-      hasError = true;
-    } else {
-      setwrongPasswordCapitalLetter({
-        isError: false,
-        errorText: '',
-      });
-    }
-    if (!hasNumber(password)) {
-      setwrongPasswordNumber({
-        isError: true,
-        errorText: 'Password must contain at least one number (0-9)',
-      });
-      hasError = true;
-    } else {
-      setwrongPasswordNumber({
-        isError: false,
-        errorText: '',
-      });
-    }
-
-    setWrongPassword(hasError);
-  }, [password]);
+  const onSubmit = (data: any) => {
+    router.push(PageLinks.Login);
+  };
 
   useEffect(() => {
-    checkPasswordError();
-  }, [password, checkPasswordError]);
+    const rulesArr = [
+      watch('newPassword').length >= 8,
+      LETTER_CHECK.test(watch('newPassword').charAt(0)),
+      NUMBER_CHECK.test(watch('newPassword')),
+    ];
 
-  useEffect(() => {
-    // resetting error messages when password input is cleared
-    if (!password.length) {
-      setWrongPassword(false);
-      setPasswordTips(false);
-    }
-  }, [password]);
+    const count = rulesArr.filter(Boolean).length;
+    let strength =
+      count > 2
+        ? PasswordStrength.Strong
+        : count > 1
+        ? PasswordStrength.Weak
+        : PasswordStrength.TooWeak;
 
-  const formValidation = () => {
-    if (wrongPassword) {
-      setPasswordTips(true);
-    } else {
-      router.push(PageLinks.Login);
-    }
-  };
-
-  const checkPasswordStrength = () => {
-    let isStrongPassword = wrongPassword
-      ? wrongPasswordLength.isError ||
-        wrongPasswordCapitalLetter.isError ||
-        wrongPasswordNumber.isError
-        ? false
-        : true
-      : undefined;
-
-    return isStrongPassword;
-  };
-
-  const checkPasswordMatch = () => {
-    let isMatch =
-      password.length > 0 && password === confirmPassword
-        ? true
-        : confirmPassword.length > 0
-        ? false
-        : undefined;
-
-    return isMatch;
-  };
+    setPasswordStrength(strength);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch('newPassword')]);
 
   return (
-    <LoginLayout title="create my password">
-      <div className="login-fields">
-        <TextField
-          label="New Password"
-          $underlineBorder
-          $darkMode
-          $passwordStrength
-          $isError={password.length ? !wrongPassword : undefined}
-          placeholder={'Enter password'}
-          type={TextFieldType.Password}
-          onValueChange={setPassword}
-        />
-
-        {passwordTips &&
-        (wrongPasswordLength.isError ||
-          wrongPasswordCapitalLetter.isError ||
-          wrongPasswordNumber.isError) ? (
-          <PasswordStrengthBox strongPassword={checkPasswordStrength()}>
-            <Typography>
-              The password you&apos;ve chosen is <span>too weak</span> - try the
-              following:
-            </Typography>
-            <StyledUnorderedList>
-              {wrongPasswordLength.isError ? (
-                <li>
-                  <Typography>{wrongPasswordLength.errorText}</Typography>
-                </li>
-              ) : (
-                ''
-              )}
-              {wrongPasswordCapitalLetter.isError ? (
-                <li>
-                  <Typography>
-                    {wrongPasswordCapitalLetter.errorText}
-                  </Typography>
-                </li>
-              ) : (
-                ''
-              )}
-              {wrongPasswordNumber.isError ? (
-                <li>
-                  <Typography>{wrongPasswordNumber.errorText}</Typography>
-                </li>
-              ) : (
-                ''
-              )}
-            </StyledUnorderedList>
-          </PasswordStrengthBox>
-        ) : null}
-
-        <TextField
-          label="Confirm New Password"
-          $underlineBorder
-          $darkMode
-          $isError={checkPasswordMatch()}
-          placeholder={'Confirm Password'}
-          type={TextFieldType.Password}
-          onValueChange={setConfirmPassword}
-        />
-
-        {password !== confirmPassword && confirmPassword.length ? (
-          <Typography color={red1}>Passwords doesn&apos;t match.</Typography>
-        ) : null}
-
-        <Box display={'flex'} justifyContent={'center'} marginTop={'10px'}>
-          <Button
-            label={'Create New Password'}
-            onClick={formValidation}
-            color={ButtonColor.Secondary}
-            disabled={!password.length || !confirmPassword.length}
-            startIcon={<Image src={ArrowIcon} alt="ArrowLogin" />}
-          />
-        </Box>
+    <>
+      <div className="w-full text-center rounded-[1px] left-0 top-0">
+        <h3 className="bg-grey4 text-white font-heading font-normal text-[32px] leading-[34px] p-[30px]">
+          {'create new password'}
+        </h3>
       </div>
-    </LoginLayout>
+      <form
+        className="flex flex-col gap-5 p-[30px]"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Controller
+          name="newPassword"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <FormInput
+              {...field}
+              label="New Password"
+              passwordStrength={passwordStrength}
+              placeholder={'Enter new password'}
+              type={FieldType.Password}
+              error={errors.newPassword ?? false}
+              helperText={errors.newPassword?.message?.toString()}
+            />
+          )}
+        />
+
+        {errors.newPassword && watch('newPassword') ? (
+          <div className="text-xs">
+            <div>
+              The password you&apos;ve chosen is{' '}
+              <span
+                className={`${
+                  passwordStrength === PasswordStrength.Strong
+                    ? 'text-green1'
+                    : passwordStrength === PasswordStrength.Weak
+                    ? 'text-yellow'
+                    : 'text-red1'
+                }`}
+              >
+                {passwordStrength.toLowerCase()}
+              </span>{' '}
+              - try the following:
+            </div>
+            <ul className="m-0 pt-2.5 pb-0 px-[15px]">
+              {watch('newPassword').length < 8 ? (
+                <li className="p-0">
+                  <p className="text-xs">
+                    {'Password must be at least 8 characters long.'}
+                  </p>
+                </li>
+              ) : (
+                ''
+              )}
+              {!LETTER_CHECK.test(watch('newPassword').charAt(0)) ? (
+                <li className="p-0">
+                  <p className="text-xs">
+                    {'Password must start with a letter (A-Z, a-z).'}
+                  </p>
+                </li>
+              ) : (
+                ''
+              )}
+              {!NUMBER_CHECK.test(watch('newPassword')) ? (
+                <li className="p-0">
+                  <p className="text-xs">
+                    {'Password must contain at least one number (0-9).'}
+                  </p>
+                </li>
+              ) : (
+                ''
+              )}
+            </ul>
+          </div>
+        ) : (
+          ''
+        )}
+
+        <Controller
+          name="confirmPassword"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <FormInput
+              {...field}
+              label="Confirm New Password"
+              placeholder={'Enter password confirmation'}
+              type={FieldType.Password}
+              error={errors.confirmPassword ?? false}
+              helperText={errors.confirmPassword?.message?.toString()}
+            />
+          )}
+        />
+
+        <div className="flex justify-center">
+          <Button
+            className="bg-green [&:hover]:bg-green rounded-[1px]"
+            size={'large'}
+            colorVariant={'secondary'}
+            type={'submit'}
+            label={'Create New Password'}
+            dataTestid={'create-new-password-button'}
+            startIcon={
+              <Image
+                src={ArrowIcon}
+                alt={'ArrowLogin'}
+                className="relative top-[-0.5px] -left-2.5"
+              />
+            }
+          />
+        </div>
+      </form>
+    </>
   );
 };
 
