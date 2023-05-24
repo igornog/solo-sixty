@@ -27,7 +27,6 @@ const CustomButton: React.FunctionComponent<Props> = (props) => {
         rounded-4px
         my-0
         ${props.size === 'small' ? 'py-2 px-4' : 'py-3 px-12'}
-        ${props.className}
       `}
     >
       {props.startIcon && props.startIcon}
