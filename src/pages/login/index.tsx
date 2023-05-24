@@ -33,7 +33,7 @@ const Login: React.FunctionComponent = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit: SubmitHandler<ValidationSchemaType> = (data: any) => {
-    router.push(PageLinks.Sessions)
+    router.push(PageLinks.Sessions);
   };
 
   return (
