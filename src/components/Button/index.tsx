@@ -24,7 +24,7 @@ const CustomButton: React.FunctionComponent<Props> = (props) => {
         ${
           props.colorVariant === ColorVariant.Primary
             ? `bg-primary [&:hover]:bg-primary`
-            : null
+            : ``
         }
         text-white
         ${props.size === 'large' ? 'px-16' : 'px-4'}
