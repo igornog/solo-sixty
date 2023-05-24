@@ -5,6 +5,7 @@ export enum PageLinks {
   CreateNewPassword = '/login/create-new-password',
 
   Dashboard = '/dashboard',
+  Sessions = 'locations&sessions/sessions'
 }
 export enum MenuItems {
   Dashboard = 'Dashboard',

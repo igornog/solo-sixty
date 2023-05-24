@@ -4,6 +4,7 @@ import LoginLayout from '../components/Layout/Login';
 import '../assets/css/global.css';
 import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@material-ui/core';
+import { useRouter } from 'next/router';
 
 export const solo60Theme = createTheme({
   palette: {
@@ -16,12 +17,12 @@ export const solo60Theme = createTheme({
   },
 });
 export default function App({ Component, pageProps }: AppProps) {
-  let logged = false;
+  const route = useRouter();
 
   return (
     <>
       <ThemeProvider theme={solo60Theme}>
-        {!logged ? (
+        {route.pathname.includes('/login') ? (
           <LoginLayout>
             <Component {...pageProps} />
           </LoginLayout>
@@ -34,3 +35,4 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   );
 }
+

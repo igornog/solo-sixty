@@ -8,8 +8,11 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Logout from '@mui/icons-material/Logout';
 import { Notification } from 'iconsax-react';
+import { PageLinks } from '../../../constants';
+import { useRouter } from 'next/router';
 
 export default function AccountMenu() {
+  const route = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -17,6 +20,10 @@ export default function AccountMenu() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const logOut = () => {
+    route.push(PageLinks.Login);
   };
 
   return (
@@ -75,7 +82,7 @@ export default function AccountMenu() {
           <Avatar /> Profile
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={logOut} disableRipple>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
