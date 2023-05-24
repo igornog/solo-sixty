@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import VerificationEmail from './email-verification';
+import VerificationEmail from '../../pages/login/email-verification';
 import { PageLinks } from '../../constants';
-import '@testing-library/jest-dom';
 import { useRouter } from 'next/router';
 
 jest.mock('next/router', () => ({

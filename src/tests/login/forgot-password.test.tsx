@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import ForgotPassword from './forgot-password';
+import ForgotPassword from '../../pages/login/forgot-password';
 import { PageLinks } from '../../constants';
 
 jest.mock('next/router', () => ({
