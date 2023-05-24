@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Button } from '@mui/material';
 import { ColorVariant } from '../../constants';
 
@@ -21,17 +22,13 @@ const CustomButton: React.FunctionComponent<Props> = (props) => {
       size={props.size ?? 'medium'}
       data-testid={props.dataTestid}
       className={`
-        ${
-          props.colorVariant === ColorVariant.Primary
-            ? `bg-primary [&:hover]:bg-primary`
-            : ``
-        }
+        ${props.colorVariant === ColorVariant.Primary ? `bg-primary [&:hover]:bg-primary` : 'false'}
         text-white
         ${props.size === 'large' ? 'px-16' : 'px-4'}
         rounded-4px
         my-0
         ${props.className}
-        `}
+      `}
     >
       {props.startIcon && props.startIcon}
       <p className={'font-inter font-semibold normal-case'}>{props.label}</p>
