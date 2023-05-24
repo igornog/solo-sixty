@@ -85,6 +85,6 @@ describe('Login Component', () => {
       fireEvent.click(screen.getByTestId('login-button'));
     });
     // Check that the form was submitted and the router was called
-    expect(routerPushMock).toHaveBeenCalledWith(PageLinks.ForgotPassword);
+    expect(routerPushMock).toHaveBeenCalledWith(PageLinks.Sessions);
   });
 });
