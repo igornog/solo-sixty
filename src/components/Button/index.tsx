@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Button } from '@mui/material';
+import { ButtonBase } from '@mui/material';
 import { ColorVariant } from '../../constants';
 
 interface Props {
@@ -16,24 +16,24 @@ interface Props {
 
 const CustomButton: React.FunctionComponent<Props> = (props) => {
   return (
-    <Button
+    <ButtonBase
       type={props.type ?? 'button'}
       onClick={props.onClick}
-      size={props.size ?? 'medium'}
       data-testid={props.dataTestid}
       className={`
-        ${props.colorVariant === ColorVariant.Primary ? `bg-primary [&:hover]:bg-primary` : 'false'}
+        ${props.className}
+        ${props.colorVariant === ColorVariant.Primary ? `bg-primary [&:hover]:bg-primary` : 'bg-secondary [&:hover]:bg-secondary'}
         text-white
-        ${props.size === 'large' ? 'px-16' : 'px-4'}
         rounded-4px
         my-0
+        ${props.size === 'small' ? 'py-2 px-4' : 'py-3 px-12'}
         ${props.className}
       `}
     >
       {props.startIcon && props.startIcon}
       <p className={'font-inter font-semibold normal-case'}>{props.label}</p>
       {props.endIcon && props.endIcon}
-    </Button>
+    </ButtonBase>
   );
 };
 
