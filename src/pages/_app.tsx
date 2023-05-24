@@ -16,7 +16,7 @@ export const solo60Theme = createTheme({
   },
 });
 export default function App({ Component, pageProps }: AppProps) {
-  let logged = true;
+  let logged = false;
 
   return (
     <>
