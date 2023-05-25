@@ -1,9 +1,9 @@
+import '../assets/css/global.css';
 import type { AppProps } from 'next/app';
 import Layout from '../components/Layout/Layout';
 import LoginLayout from '../components/Layout/Login';
-import '../assets/css/global.css';
 import { ThemeProvider } from '@mui/material';
-import { createTheme } from '@material-ui/core';
+import { createTheme, StylesProvider } from '@material-ui/core';
 import { useRouter } from 'next/router';
 
 export const solo60Theme = createTheme({
@@ -20,7 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const route = useRouter();
 
   return (
-    <>
+    <StylesProvider injectFirst>
       <ThemeProvider theme={solo60Theme}>
         {route.pathname.includes('/login') ? (
           <LoginLayout>
@@ -32,6 +32,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </Layout>
         )}
       </ThemeProvider>
-    </>
+    </StylesProvider>
   );
 }
